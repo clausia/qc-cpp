@@ -8,8 +8,10 @@ LIBS=`itpp-config --static --libs`
 NVCCFLAGS= -arch=sm_13
 INCLUDES := -I. -I ../
 
-#documentation ::
-#	doxygen
+all: documentation test_spins
+
+documentation ::
+	doxygen
 # register:: register.cpp
 # 	$(CXX) -I../ $(CXXFLAGS) -o $@ $@.cpp $(LIBS)
 
@@ -35,7 +37,7 @@ test_spins:: test_spins.cpp
 test_dev_random_kanbalam :: test_dev_random
 	bsub  -oo salida -eo error -q pruebas -n 5 srun ./test_dev_random
 
-testing :: testing.cpp ../cpp/cfp_math.cpp $(MYCPP)/cpp/itpp_ext_math.cpp
+testing :: testing.cpp cfp_math.cpp itpp_ext_math.cpp
 	$(CXX)  -o $@ -I $(MYCPP) -litpp $@.cpp
 
 % :: %.cpp
