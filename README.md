@@ -5,16 +5,16 @@ C++ toolbox for quantum computation
 
 ### Prerequisites
 * [GNU gcc compiler][gcc]
-* [clang][clang]
+* [Clang][clang]
 * [GNU fortran compiler][fortran]
-* [tclap][tclap]
+* [TCLAP][tclap]
 * [IT++][IT++]
-* [fftw][fftw]
-* [doxygen][doxygen]
+* [FFTW][fftw]
+* [Doxygen][doxygen]
 * [GNU Make][make]
 
 
-## Ubuntu Build Guide
+### Ubuntu Build Guide
 To install the dependencies, run the following commands.
 
 ```bash
@@ -26,7 +26,7 @@ GNU gcc compiler
 ```bash
 sudo apt install g++ clang ibc++-helpers pentium-builder
 ```
-GNU g77 compiler
+GNU fortran compiler
 
 ```bash
 sudo apt install gfortran
