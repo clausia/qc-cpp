@@ -4,14 +4,14 @@ C++ toolbox for quantum computation
 ## Getting Started
 
 ### Prerequisites
-* GNU gcc compiler
-* clang
-* GNU g77 compiler
+* [GNU gcc compiler][gcc]
+* [clang][clang]
+* [GNU fortran compiler][fortran]
 * [tclap][tclap]
 * [IT++][IT++]
 * [fftw][fftw]
-* [[doxygen][[doxygen]
-* GNU Make
+* [doxygen][doxygen]
+* [GNU Make][make]
 
 
 ## Ubuntu Build Guide
@@ -43,8 +43,11 @@ Doxygen
 ```bash
 sudo apt install doxygen graphviz
 ```
-
+[gcc]: https://www.gnu.org/software/gcc/
+[fortran]: https://gcc.gnu.org/fortran/
+[clang]: https://clang.llvm.org/
 [tclap]: https://sourceforge.net/projects/tclap/
 [IT++]: https://sourceforge.net/projects/itpp/
 [fftw]: http://fftw.org/
 [doxygen]: http://www.doxygen.org/
+[make]: https://www.gnu.org/software/make/
