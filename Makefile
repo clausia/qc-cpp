@@ -48,3 +48,9 @@ test_rmt:: test_rmt.cpp
 
 basic_libs.tgz :: cfp_math.cpp cfp_math.h dev_random.cpp itpp_ext_math.cpp itpp_ext_math.h purity_RMT.cpp purity_RMT.h RMT.cpp RMT.h spinchain.cpp
 	tar -cvzf $@ $^
+
+.PHONY: clean
+
+clean::
+	rm -f test_spins
+	echo Clean done
