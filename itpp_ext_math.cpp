@@ -1878,7 +1878,7 @@ double test_real_symmetric(const itpp::cmat H){ // {{{
  return test_symmetry(H) + test_reality(H);
 } // }}}
 double test_unit_matrix(const itpp::cmat U){ // {{{
-  if (!U.cols() == U.rows()){
+  if (U.cols() != U.rows()){
     std::cout << "La matriz no es cuadrada\n";
     abort();
     return -1;
@@ -1886,7 +1886,7 @@ double test_unit_matrix(const itpp::cmat U){ // {{{
  return itpp::norm(U - itpp::eye_c(U.rows() )); 
 } // }}}
 double test_unitarity(const itpp::cmat U){ // {{{
-  if (!U.cols() == U.rows()){
+  if (U.cols() != U.rows()){
     std::cout << "La matriz no es cuadrada\n";
     abort();
     return -1;
