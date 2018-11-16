@@ -4,4 +4,6 @@ test_spines
 test_spins
 test_spins_fast
 doc
-
+/test_memory_time
+/test_rmt
+/test_spins2d

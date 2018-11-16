@@ -8,7 +8,9 @@ LIBS=`itpp-config --static --libs`
 NVCCFLAGS= -arch=sm_13
 INCLUDES := -I. -I ../
 
-all: documentation test_spins
+default:: clean test_spins
+
+all:: documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random_kanbalam
 
 documentation ::
 	doxygen
@@ -53,4 +55,9 @@ basic_libs.tgz :: cfp_math.cpp cfp_math.h dev_random.cpp itpp_ext_math.cpp itpp_
 
 clean::
 	rm -f test_spins
+	rm -f test_spins2d
+	rm -f test_memory_time
+	rm -f test_rmt
+	rm -f test_spins_fast
+	#rm -r doc
 	echo Clean done
