@@ -10,7 +10,7 @@ INCLUDES := -I. -I ../
 
 default:: clean test_spins
 
-all:: documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random_kanbalam
+all:: clean documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random_kanbalam
 
 documentation ::
 	doxygen
@@ -40,7 +40,8 @@ test_dev_random_kanbalam :: test_dev_random
 	bsub  -oo salida -eo error -q pruebas -n 5 srun ./test_dev_random
 
 testing :: testing.cpp cfp_math.cpp itpp_ext_math.cpp
-	$(CXX)  -o $@ -I $(MYCPP) -litpp $@.cpp
+	$(CXX) -I../ -I . -o $@ $@.cpp $(LIBS)
+	#$(CXX)  -o $@ -I $(MYCPP) -litpp $@.cpp
 
 % :: %.cpp
 	$(CXX) $< -Wall -o $@ -I $(MYCPP) -litpp
@@ -59,5 +60,7 @@ clean::
 	rm -f test_memory_time
 	rm -f test_rmt
 	rm -f test_spins_fast
-	#rm -r doc
+	rm -f testing
+	rm -f basic_libs.tgz
+	rm -rf doc
 	echo Clean done
