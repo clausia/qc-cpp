@@ -10,7 +10,7 @@ INCLUDES := -I. -I ../
 
 default:: clean test_spins
 
-all:: clean documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random_kanbalam
+all:: clean documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random
 
 documentation ::
 	doxygen
@@ -36,8 +36,11 @@ test_spins_fast :: test_spins.cpp
 test_spins:: test_spins.cpp
 	$(CXX)  -Wall -I../ -I . $(INCLUDETCLAP) $(CXXFLAGS) -o $@ $@.cpp $(LIBS)
 
-test_dev_random_kanbalam :: test_dev_random
-	bsub  -oo salida -eo error -q pruebas -n 5 srun ./test_dev_random
+test_dev_random:: test_dev_random.cpp
+	$(CXX)  -Wall -I../ -I . $(INCLUDETCLAP) $(CXXFLAGS) -o $@ $@.cpp $(LIBS)
+
+#test_dev_random_kanbalam :: test_dev_random
+#	bsub  -oo salida -eo error -q pruebas -n 5 srun ./test_dev_random
 
 testing :: testing.cpp cfp_math.cpp itpp_ext_math.cpp
 	$(CXX) -I../ -I . -o $@ $@.cpp $(LIBS)
@@ -61,6 +64,7 @@ clean::
 	rm -f test_rmt
 	rm -f test_spins_fast
 	rm -f testing
+	rm -f test_dev_random
 	rm -f basic_libs.tgz
 	rm -rf doc
 	echo Clean done
