@@ -9,3 +9,8 @@ doc
 /test_spins2d
 /testing
 /test_dev_random
+.DS_Store
+CMakeLists.txt
+tmp
+cmake-build-debug
+.idea
