@@ -234,6 +234,227 @@ cout <<norm(state-state_out_eduardo) << endl;
     rho= partial_trace_qubits(state,1);
     cout << rho << " "  << endl;
   //}}}
+
+
+//*************************************************************************************
+  } else if(option=="pruebas_clau") {// {{{
+
+    //int q = 15;
+    //int dim = pow_2(q);
+
+    cvec state1 = itpp::to_cvec(BellState(4));
+    cvec state2 = itpp::to_cvec(BellState(4));
+    cvec state12 = TensorProduct(state1, state2);
+
+    cout << "state1: " << state1 << endl << endl;
+    cout << "state2: " << state2 << endl << endl;
+    cout << "state12: " << state12 << endl << endl;
+
+    cmat rho1 = partial_trace_qubits(state12, 6);
+
+    cout << "rho1: " << rho1 << endl << endl;
+
+    cout << "concurrence: " << itppextmath::Concurrence(rho1) << endl << endl;
+
+
+    cout << "-------------------------------------------------" << endl << endl;
+
+
+    cvec state3 = RandomState(pow_2(15));
+    cvec state13 = TensorProduct(state1, state3);
+
+    cout << "state1: " << state1 << endl << endl;
+    cout << "state3: " << state3 << endl << endl;
+    cout << "state13: " << state13 << endl << endl;
+
+    cmat rho2 = partial_trace_qubits(state13, 98304);
+
+    cout << "rho2: " << rho2 << endl << endl;
+
+    cout << "concurrence: " << itppextmath::Concurrence(rho2) << endl << endl;
+
+  } else if(option=="test_clau_sigmas") {// {{{
+
+    cmat sigmay(2,2);
+    std::complex<double> Im0(0,0);
+    std::complex<double> Im1(0,-1);
+    std::complex<double> Im2(0,1);
+    sigmay(0,0) = Im0;
+    sigmay(0,1) = Im1;
+    sigmay(1,0) = Im2;
+    sigmay(1,1) = Im0;
+    cout << "sigmay: " << sigmay  << endl;
+
+    cmat prodSigmas = TensorProduct(sigmay,sigmay);
+    cout << "tensorProd: " << prodSigmas << endl;
+
+
+    cmat matany(4,4);
+    int c = 1.;
+    for(int i = 0; i < 4; i++){
+      for(int j = 0; j < 4; j++){
+        matany(i,j) = c++;
+      }
+    }
+    matany = 0.;
+    matany(0,0) = 0.5;
+    matany(0,3) = 0.5;
+    matany(3,0) = 0.5;
+    matany(3,3) = 0.5;
+    cout << "matany: " << matany << endl;
+
+    cmat prod1 = matany*prodSigmas;
+    cout << "prod1: " << prod1 << endl;
+
+
+    cmat matasterisco = conj(matany);
+    cout << "matasterisco: " << matasterisco << endl;
+
+    cmat prodastesig = matasterisco*prodSigmas;
+    cmat prodmatsig = matany*prodSigmas;
+    cmat allprod = prodmatsig*prodastesig;
+    cout << "prodastesig: " << prodastesig << endl;
+    cout << "prodmatsig: " << prodmatsig << endl;
+    cout << "allprod: " << allprod << endl;
+
+
+    cmat matroot = sqrtm(allprod);
+    cout << "matroot: " << matroot << endl;
+
+
+
+    vec eigenval = real(eig(matroot));
+    cout << "eigenval: " << eigenval << endl;
+
+    itpp::sort(eigenval);
+    cout << "eigenval: " << eigenval << endl;
+
+    double maxi = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
+    cout << "maxi: " << maxi << endl;
+
+
+
+  } else if(option=="test_clau") {// {{{
+    //int q=qubits.getValue();
+    int q = 13;
+    int dim = pow_2(q);
+    int which = 3; //24576[13env]; //3);//98304[15env];
+
+    int time_steps = 4500;
+
+    vec b(3);
+    b(0) = 1.88;;//1.4//1.55
+    b(1) = 0.;
+    b(2) = 0.58;//1.4//0.
+
+    //vec local_b(3);
+    //local_b(0) = 1.4;//1.4//1.55
+    //local_b(1) = 0.;
+    //local_b(2) = 1.4;//1.4//0.
+
+    double  J = 1.;//itpp::randu(); //1;
+    double J_interaction = 0.03;
+
+    cvec state_env, state, state_q;
+    cmat rho;
+
+    int condiciones_iniciales = 1;
+
+    for(int ci = 1; ci <= condiciones_iniciales; ci++){
+
+      ofstream myfile;
+      //myfile.open("../tests/q13_t20_b1.55/test_" + std::to_string(ci) + ".dat");
+      myfile.open("../tests/q13_t4500/test_bpe1.88_bpa0.58.dat");
+
+      state_env = RandomState(dim);
+      state_q = itpp::to_cvec(BellState(4));
+      state = TensorProduct(state_env, state_q);//state_q, state_env); //state_env, state_q);
+      //cout << state_env << " "  << endl;
+      //cout << "--"  << endl;
+      //cout << state_q << " "  << endl;
+      //cout << "--"  << endl;
+      //cout << state << " "  << endl;
+      //cout << "--"  << endl;
+
+      //itpp::Vec<double> eigenvalues_rho;
+
+      rho = partial_trace_qubits(state, which);
+      //cout << 0 << "," << itppextmath::Purity(rho) << "," << itppextmath::Concurrence(rho) << endl;
+      //cout << rho << endl;
+
+      //mi concurrence *********************************************
+      //cmat sigmay(2,2);
+      //std::complex<double> Im0(0,0);
+      //std::complex<double> Im1(0,-1);
+      //std::complex<double> Im2(0,1);
+      //sigmay(0,0) = Im0;
+      //sigmay(0,1) = Im1;
+      //sigmay(1,0) = Im2;
+      //sigmay(1,1) = Im0;
+      //cmat prodSigmas = TensorProduct(sigmay,sigmay);
+
+      //cmat matasterisco = conj(rho);
+      //cmat prodastesig = matasterisco*prodSigmas;
+      //cmat prodmatsig = rho*prodSigmas;
+      //cmat allprod = prodmatsig*prodastesig;
+      //cmat matroot = sqrtm(allprod);
+      //vec eigenval = real(eig(matroot));
+      //itpp::sort(eigenval);
+      //double concu = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
+      //double concu = eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0);
+      //fin mi concurrence *****************************************
+
+      //cout << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << " " << concu << endl;
+      //cout << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+      myfile << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+
+      for (int i_time = 1; i_time <= time_steps; i_time++){
+
+        //apply_star(state, J, b, J_interaction, local_b);
+        //apply_star_most(state, J, b, J_interaction, local_b);
+        //apply_star_double(state, J, b, 0, J_interaction, local_b, q);
+        apply_common_environment_chain(state, J, J_interaction, b);
+        //apply_chain(state, J, b);
+        //apply_spectator(state, J, J_interaction, b);
+        rho = partial_trace_qubits(state, which);
+
+        //itpp::eig_sym(rho, eigenvalues_rho);
+
+        //for (int i=0;i<4;i++){
+        //  std::cout << eigenvalues_rho(i)<<" ";
+        //}
+
+        //mi concurrence *********************************************
+        //matasterisco = conj(rho);
+        //prodastesig = matasterisco*prodSigmas;
+        //prodmatsig = rho*prodSigmas;
+        //allprod = prodmatsig*prodastesig;
+        //matroot = sqrtm(allprod);
+        //eigenval = real(eig(matroot));
+        //itpp::sort(eigenval);
+        //concu = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
+        //concu = eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0);
+        //fin mi concurrence *****************************************
+
+        //cout << i_time << "," << itppextmath::Purity(rho) << "," << itppextmath::Concurrence(rho) << endl;
+        //cout << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << " " << concu << endl;
+        //cout << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+        myfile << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+
+      }
+      //cout << rho << " "  << endl;
+
+
+    }
+  //}}}
+
+
+//*************************************************************************************
+
+
+
+
+
   } else if(option=="test_MatrixForIsing_star") {// {{{
     int q=qubits.getValue();
     int dim=pow_2(q);
