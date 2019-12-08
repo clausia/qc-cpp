@@ -42,6 +42,11 @@ const std::string currentDateTime() {
 
     return buf;
 }
+
+void generateDataForFig(int q, int dim, int which, int time_steps, vec b, double J,
+                        double J_interaction, int condiciones_iniciales,
+                        std::string folderName, std::string fieName);
+
 int main(int argc, char* argv[]) { //{{{
 // 	Random semilla_uran;
 // 	itpp::RNG_reset(semilla_uran.strong());
@@ -64,7 +69,7 @@ int main(int argc, char* argv[]) { //{{{
       state(i) = complex<double>(x,y) ;
     }
     myReadFile.close();
-    
+
     vec b(3); b(0)=bx.getValue(); b(1)=by.getValue(); b(2)=bz.getValue();
     apply_magnetic_kick(state,b,position.getValue());
     for (int i=0; i<dim; i++){
@@ -81,7 +86,7 @@ int main(int argc, char* argv[]) { //{{{
       state(i) = complex<double>(x,y) ;
     }
     myReadFile.close();
-    
+
     vec b(3); b(0)=bx.getValue(); b(1)=by.getValue(); b(2)=bz.getValue();
     apply_magnetic_kick(state,b);
     for (int i=0; i<dim; i++){
@@ -125,7 +130,7 @@ int main(int argc, char* argv[]) { //{{{
 //       cout << x <<", "<<y<<endl;
     }
     myReadFile.close();
-        
+
     vec b(3); b(0)=bx.getValue(); b(1)=by.getValue(); b(2)=bz.getValue();
 
     apply_chain(state,Ising.getValue(),b);
@@ -161,13 +166,13 @@ int main(int argc, char* argv[]) { //{{{
 //       cout << i<< "; " << state(i) <<", "<<state_out_eduardo(i)<<endl;
     }
     myReadFile.close();
-apply_chain(state,J,b);
-// norm(state,state_out_eduardo)
-// cout <<state<<endl<<endl<<state_out_eduardo;
-cout <<norm(state) << endl;
-cout <<norm(state_out_eduardo) << endl;
-cout <<norm(state-state_out_eduardo) << endl;
-    
+    apply_chain(state,J,b);
+    // norm(state,state_out_eduardo)
+    // cout <<state<<endl<<endl<<state_out_eduardo;
+    cout <<norm(state) << endl;
+    cout <<norm(state_out_eduardo) << endl;
+    cout <<norm(state-state_out_eduardo) << endl;
+
 //     apply_ising_z(state,J,b);
     for (int i=0; i<dim; i++){
 //       cout << real(state(i)) << " " << real(-Im*state(i)) << endl;
@@ -184,7 +189,7 @@ cout <<norm(state-state_out_eduardo) << endl;
 //       cout << x <<", "<<y<<endl;
     }
     myReadFile.close();
-    
+
     apply_ising_z(state,Ising.getValue(),position.getValue(), position2.getValue());
     for (int i=0; i<dim; i++){
       cout << real(state(i)) << " " << real(-Im*state(i)) << endl;
@@ -235,224 +240,87 @@ cout <<norm(state-state_out_eduardo) << endl;
     cout << rho << " "  << endl;
   //}}}
 
+} else if(option=="test_evolution_letter_fig2") {
 
-//*************************************************************************************
-  } else if(option=="pruebas_clau") {// {{{
-
-    //int q = 15;
-    //int dim = pow_2(q);
-
-    cvec state1 = itpp::to_cvec(BellState(4));
-    cvec state2 = itpp::to_cvec(BellState(4));
-    cvec state12 = TensorProduct(state1, state2);
-
-    cout << "state1: " << state1 << endl << endl;
-    cout << "state2: " << state2 << endl << endl;
-    cout << "state12: " << state12 << endl << endl;
-
-    cmat rho1 = partial_trace_qubits(state12, 6);
-
-    cout << "rho1: " << rho1 << endl << endl;
-
-    cout << "concurrence: " << itppextmath::Concurrence(rho1) << endl << endl;
-
-
-    cout << "-------------------------------------------------" << endl << endl;
-
-
-    cvec state3 = RandomState(pow_2(15));
-    cvec state13 = TensorProduct(state1, state3);
-
-    cout << "state1: " << state1 << endl << endl;
-    cout << "state3: " << state3 << endl << endl;
-    cout << "state13: " << state13 << endl << endl;
-
-    cmat rho2 = partial_trace_qubits(state13, 98304);
-
-    cout << "rho2: " << rho2 << endl << endl;
-
-    cout << "concurrence: " << itppextmath::Concurrence(rho2) << endl << endl;
-
-  } else if(option=="test_clau_sigmas") {// {{{
-
-    cmat sigmay(2,2);
-    std::complex<double> Im0(0,0);
-    std::complex<double> Im1(0,-1);
-    std::complex<double> Im2(0,1);
-    sigmay(0,0) = Im0;
-    sigmay(0,1) = Im1;
-    sigmay(1,0) = Im2;
-    sigmay(1,1) = Im0;
-    cout << "sigmay: " << sigmay  << endl;
-
-    cmat prodSigmas = TensorProduct(sigmay,sigmay);
-    cout << "tensorProd: " << prodSigmas << endl;
-
-
-    cmat matany(4,4);
-    int c = 1.;
-    for(int i = 0; i < 4; i++){
-      for(int j = 0; j < 4; j++){
-        matany(i,j) = c++;
-      }
-    }
-    matany = 0.;
-    matany(0,0) = 0.5;
-    matany(0,3) = 0.5;
-    matany(3,0) = 0.5;
-    matany(3,3) = 0.5;
-    cout << "matany: " << matany << endl;
-
-    cmat prod1 = matany*prodSigmas;
-    cout << "prod1: " << prod1 << endl;
-
-
-    cmat matasterisco = conj(matany);
-    cout << "matasterisco: " << matasterisco << endl;
-
-    cmat prodastesig = matasterisco*prodSigmas;
-    cmat prodmatsig = matany*prodSigmas;
-    cmat allprod = prodmatsig*prodastesig;
-    cout << "prodastesig: " << prodastesig << endl;
-    cout << "prodmatsig: " << prodmatsig << endl;
-    cout << "allprod: " << allprod << endl;
-
-
-    cmat matroot = sqrtm(allprod);
-    cout << "matroot: " << matroot << endl;
-
-
-
-    vec eigenval = real(eig(matroot));
-    cout << "eigenval: " << eigenval << endl;
-
-    itpp::sort(eigenval);
-    cout << "eigenval: " << eigenval << endl;
-
-    double maxi = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
-    cout << "maxi: " << maxi << endl;
-
-
-
-  } else if(option=="test_clau") {// {{{
-    //int q=qubits.getValue();
-    int q = 13;
+    int q = 13;          //environment
     int dim = pow_2(q);
-    int which = 3; //24576[13env]; //3);//98304[15env];
+    int which = 3;       //position of central system qubits, specified in binary, witten in decimal
+
+    int time_steps = 20;
+
+    double  J = 1.;                //coupling between elements of the environment
+    double J_interaction = 0.03;   //coupling between the central system and the environment
+
+    int initial_conditions = 60; //quantity of excecutions
+
+    std::string startFileName = "test_";
+
+    //** case: b_parallel = b_perpendicular = 1.4
+    vec b1(3);
+    b1(0) = 1.4;
+    b1(1) = 0.;
+    b1(2) = 1.4;
+    std::string folderName1 = "../tests/q13_t20_b1.4";
+
+    generateDataForFig(q, dim, which, time_steps, b1, J, J_interaction,
+                       initial_conditions, folderName1, startFileName);
+
+    //** case: b_parallel = 0 and b_perpendicular = 1.55
+    vec b2(3);
+    b2(0) = 1.55;
+    b2(1) = 0.;
+    b2(2) = 0.;
+    std::string folderName2 = "../tests/q13_t20_b1.55";
+
+    generateDataForFig(q, dim, which, time_steps, b2, J, J_interaction,
+                       initial_conditions, folderName2, startFileName);
+
+} else if(option=="test_evolution_letter_fig3") {
+
+    int q = 13;          //environment
+    int dim = pow_2(q);
+    int which = 3;       //position of central system qubits, specified in binary, witten in decimal
 
     int time_steps = 4500;
 
-    vec b(3);
-    b(0) = 1.88;;//1.4//1.55
-    b(1) = 0.;
-    b(2) = 0.58;//1.4//0.
+    double  J = 1.;                //coupling between elements of the environment
+    double J_interaction = 0.03;   //coupling between the central system and the environment
 
-    //vec local_b(3);
-    //local_b(0) = 1.4;//1.4//1.55
-    //local_b(1) = 0.;
-    //local_b(2) = 1.4;//1.4//0.
+    int initial_conditions = 1; //quantity of excecutions
 
-    double  J = 1.;//itpp::randu(); //1;
-    double J_interaction = 0.03;
+    std::string folderName = "../tests/q13_t4500";
 
-    cvec state_env, state, state_q;
-    cmat rho;
+    //** case: b_parallel = b_perpendicular = 1.4
+    vec b1(3);
+    b1(0) = 1.4;
+    b1(1) = 0.;
+    b1(2) = 1.4;
+    std::string fileName1 = "test_bpe1.4_bpa1.4_";
 
-    int condiciones_iniciales = 1;
-
-    for(int ci = 1; ci <= condiciones_iniciales; ci++){
-
-      ofstream myfile;
-      //myfile.open("../tests/q13_t20_b1.55/test_" + std::to_string(ci) + ".dat");
-      myfile.open("../tests/q13_t4500/test_bpe1.88_bpa0.58.dat");
-
-      state_env = RandomState(dim);
-      state_q = itpp::to_cvec(BellState(4));
-      state = TensorProduct(state_env, state_q);//state_q, state_env); //state_env, state_q);
-      //cout << state_env << " "  << endl;
-      //cout << "--"  << endl;
-      //cout << state_q << " "  << endl;
-      //cout << "--"  << endl;
-      //cout << state << " "  << endl;
-      //cout << "--"  << endl;
-
-      //itpp::Vec<double> eigenvalues_rho;
-
-      rho = partial_trace_qubits(state, which);
-      //cout << 0 << "," << itppextmath::Purity(rho) << "," << itppextmath::Concurrence(rho) << endl;
-      //cout << rho << endl;
-
-      //mi concurrence *********************************************
-      //cmat sigmay(2,2);
-      //std::complex<double> Im0(0,0);
-      //std::complex<double> Im1(0,-1);
-      //std::complex<double> Im2(0,1);
-      //sigmay(0,0) = Im0;
-      //sigmay(0,1) = Im1;
-      //sigmay(1,0) = Im2;
-      //sigmay(1,1) = Im0;
-      //cmat prodSigmas = TensorProduct(sigmay,sigmay);
-
-      //cmat matasterisco = conj(rho);
-      //cmat prodastesig = matasterisco*prodSigmas;
-      //cmat prodmatsig = rho*prodSigmas;
-      //cmat allprod = prodmatsig*prodastesig;
-      //cmat matroot = sqrtm(allprod);
-      //vec eigenval = real(eig(matroot));
-      //itpp::sort(eigenval);
-      //double concu = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
-      //double concu = eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0);
-      //fin mi concurrence *****************************************
-
-      //cout << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << " " << concu << endl;
-      //cout << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
-      myfile << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
-
-      for (int i_time = 1; i_time <= time_steps; i_time++){
-
-        //apply_star(state, J, b, J_interaction, local_b);
-        //apply_star_most(state, J, b, J_interaction, local_b);
-        //apply_star_double(state, J, b, 0, J_interaction, local_b, q);
-        apply_common_environment_chain(state, J, J_interaction, b);
-        //apply_chain(state, J, b);
-        //apply_spectator(state, J, J_interaction, b);
-        rho = partial_trace_qubits(state, which);
-
-        //itpp::eig_sym(rho, eigenvalues_rho);
-
-        //for (int i=0;i<4;i++){
-        //  std::cout << eigenvalues_rho(i)<<" ";
-        //}
-
-        //mi concurrence *********************************************
-        //matasterisco = conj(rho);
-        //prodastesig = matasterisco*prodSigmas;
-        //prodmatsig = rho*prodSigmas;
-        //allprod = prodmatsig*prodastesig;
-        //matroot = sqrtm(allprod);
-        //eigenval = real(eig(matroot));
-        //itpp::sort(eigenval);
-        //concu = max(0., eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0));
-        //concu = eigenval(3)-eigenval(2)-eigenval(1)-eigenval(0);
-        //fin mi concurrence *****************************************
-
-        //cout << i_time << "," << itppextmath::Purity(rho) << "," << itppextmath::Concurrence(rho) << endl;
-        //cout << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << " " << concu << endl;
-        //cout << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
-        myfile << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
-
-      }
-      //cout << rho << " "  << endl;
+    generateDataForFig(q, dim, which, time_steps, b1, J, J_interaction,
+                       initial_conditions, folderName, fileName1);
 
 
-    }
-  //}}}
+    //** case: b_parallel = 0 and b_perpendicular = 1.55
+    vec b2(3);
+    b2(0) = 1.55;
+    b2(1) = 0.;
+    b2(2) = 0.;
+    std::string fileName2 = "test_bpe1.55_bpa0.0_";
+
+    generateDataForFig(q, dim, which, time_steps, b2, J, J_interaction,
+                       initial_conditions, folderName, fileName2);
 
 
-//*************************************************************************************
+    //** case: b_parallel = 0.58 and b_perpendicular = 1.88
+    vec b3(3);
+    b3(0) = 1.88;
+    b3(1) = 0.;
+    b3(2) = 0.58;
+    std::string fileName3 = "test_bpe1.88_bpa0.58_";
 
-
-
+    generateDataForFig(q, dim, which, time_steps, b3, J, J_interaction,
+                       initial_conditions, folderName, fileName3);
 
 
   } else if(option=="test_MatrixForIsing_star") {// {{{
@@ -473,7 +341,7 @@ cout <<norm(state-state_out_eduardo) << endl;
     int d=pow_2(q);
     vec b=itpp::randu(3), local_b=itpp::randu(3);
 //     double  J=itpp::randu(), J_interaction=itpp::randu(); J=0.; J_interaction=0.;
-    b=1.; local_b=0.; 
+    b=1.; local_b=0.;
     b=vec_3(pi/2.,0.,0.);
     Array<cvec> state_q(2);
     cvec state_r, state_l;
@@ -489,7 +357,7 @@ cout <<norm(state-state_out_eduardo) << endl;
         U(2*j+jq, 2*i+iq) =  dot(conj(state_l),state_r) ;
       }}
     }}
-    
+
     cout << "Primero debemos escribir eficientemente la U en forma de bloque. Luego "
       <<" calcular el canal cuantico y verificar que da lo mismo" << endl;
     cout << "Is U=1 " << test_unit_matrix(U)<< endl;
@@ -518,7 +386,7 @@ cout <<norm(state-state_out_eduardo) << endl;
         U(2*j+jq, 2*i+iq) =  dot(conj(state_l),state_r) ;
       }}
     }}
-    
+
     cout << "Is U unitary? " << test_unitarity(U)<< endl;
 
     // }}}
@@ -549,18 +417,18 @@ cout <<norm(state-state_out_eduardo) << endl;
       for (int i=0; i<size_space; i++){
         state_l=DecodeCompactRotationallySymetricBasisState(basis_states(i));
         //       cout << "Norma state_l=" << norm(state_l) << endl;
-        //       abort(); 
+        //       abort();
         for (int j=0; j<size_space; j++){
           state_r=DecodeCompactRotationallySymetricBasisState(basis_states(j));
           //         cout << "norma(state_r)=" << norm(state_r) << endl;
-          //         if (j==1) abort(); 
+          //         if (j==1) abort();
           U(i,j) =  dot(conj(state_l),state_r) ;
           //         cout << dot(conj(state_l),state_r) << endl;
         }
       }
       //     cout << U << endl;
       //     cout << "ortonormalidad del sector k=" << k << endl;
-      error += norm(eye_c(size_space)-U); 
+      error += norm(eye_c(size_space)-U);
     }
     cout <<"error de la ortonormalidad en casa sector es " << error << endl;
     // }}}
@@ -584,18 +452,18 @@ cout <<norm(state-state_out_eduardo) << endl;
     for (int i=0; i<d; i++){
       state_l=DecodeCompactRotationallySymetricBasisState(basis_states(i));
       //       cout << "Norma state_l=" << norm(state_l) << endl;
-      //       abort(); 
+      //       abort();
       for (int j=0; j<d; j++){
         state_r=DecodeCompactRotationallySymetricBasisState(basis_states(j));
         //         cout << "norma(state_r)=" << norm(state_r) << endl;
-        //         if (j==1) abort(); 
+        //         if (j==1) abort();
         U(i,j) =  dot(conj(state_l),state_r) ;
         //         cout << dot(conj(state_l),state_r) << endl;
       }
     }
     //     cout << U << endl;
     //     cout << "ortonormalidad del sector k=" << k << endl;
-    error += norm(eye_c(d)-U); 
+    error += norm(eye_c(d)-U);
     cout <<"error de la ortonormalidad en todo el espacio es " << error << endl;
     // }}}
     // in each sector the eigenvectors are eigenvectors {{{
@@ -607,20 +475,20 @@ cout <<norm(state-state_out_eduardo) << endl;
         error+=norm(apply_rotation(state)-exp((2.*pi*Im*k)/q)*state);
 //         cout << "k= "<< k << ", i=" << i << "... error=" << error << endl;
 //         if( k==0 && i==0){
-//           cout << norm(state) << endl; 
-//           cout << norm(apply_rotation(state)) << endl; 
-//           cout << norm(exp((2.*pi*Im*k)/q)*state) << endl; 
-//           cout << "1." << state << endl; 
+//           cout << norm(state) << endl;
+//           cout << norm(apply_rotation(state)) << endl;
+//           cout << norm(exp((2.*pi*Im*k)/q)*state) << endl;
+//           cout << "1." << state << endl;
 //           cout << "2." << apply_rotation(state) << endl;
-//           cout << "3." << exp((2.*pi*Im*k)/q)*state << endl; 
+//           cout << "3." << exp((2.*pi*Im*k)/q)*state << endl;
 //           cout << (apply_rotation(state))-(exp((2.*pi*Im*k)/q)*state) << endl;
 // //           abort();
 //         }
-//         abort(); 
+//         abort();
       }
       //     cout << U << endl;
       //     cout << "ortonormalidad del sector k=" << k << endl;
-//       error += norm(eye_c(size_space)-U); 
+//       error += norm(eye_c(size_space)-U);
     }
     cout <<"error de los eigenvalores  " << error << endl;
     // }}}
@@ -633,7 +501,7 @@ cout <<norm(state-state_out_eduardo) << endl;
       state_l=DecodeCompactRotationallySymetricBasisState(basis_states(i));
       U+=Proyector(state_l);
     }
-    error += norm(eye_c(d)-U); 
+    error += norm(eye_c(d)-U);
     cout <<"error de la completes en todo el espacio es " << error << endl;
     // }}}
     std::cout << "error total=" << error << std::endl;
@@ -665,7 +533,7 @@ cout <<norm(state-state_out_eduardo) << endl;
   } else if(option=="test_horizontal_proyector") {// {{{
     cvec Ppsi, state;
     double error=0.;
-    // PArece que en todas las dimensiones funciona 
+    // PArece que en todas las dimensiones funciona
     //  ./test_spins -o test_horizontal_proyector --i1 3 --i2 3 --i3 5
     int nv=i2.getValue(), nh=i3.getValue(); int q= nv*nh; int d=pow_2(q);
     cout << "Test to see if projector works." << "Grid " << nh << "x" << nv  << endl;
@@ -682,7 +550,7 @@ cout <<norm(state-state_out_eduardo) << endl;
   } else if(option=="test_vertical_proyector") {// {{{
     cvec Ppsi, state;
     double error=0.;
-    // PArece que en todas las dimensiones funciona 
+    // PArece que en todas las dimensiones funciona
     //  ./test_spins -o test_horizontal_proyector --i1 3 --i2 3 --i3 5
     int nv=i2.getValue(), nh=i3.getValue(); int q= nv*nh; int d=pow_2(q);
     cout << "Test to see if vertical projector works." << "Grid " << nh << "x" << nv  << endl;
@@ -724,45 +592,45 @@ cout <<norm(state-state_out_eduardo) << endl;
     int mask;
     ivec  horizontal_basis_state_numbers(nv);
     for (int i_row=0; i_row < nv; i_row++){
-      mask = ((pow_2(nh)-1)<<(nh*i_row)); 
-//       cout << "Generator=" << g.generator <<", Mask=" << mask << ", number=" << ( (g.generator & mask) >> (nh*i_row)) << endl; 
+      mask = ((pow_2(nh)-1)<<(nh*i_row));
+//       cout << "Generator=" << g.generator <<", Mask=" << mask << ", number=" << ( (g.generator & mask) >> (nh*i_row)) << endl;
       horizontal_basis_state_numbers(i_row) = (g.generator & mask) >> (nh*i_row);
 
     } // cout << "Smaller generators = " << horizontal_basis_state_numbers << endl;
 //     for (int ib=0; ib< pow_2(nh) ; ib++){
 //       std::cout << "basis small =" << basis_states(ib) << std::endl;
 //     }
-    
+
     statesbasic.set_size(nv);
     int total_k_horizontal=0;
     std::complex<double> phase;
     for (int  i_row=0; i_row < nv; i_row++){
       statesbasic(i_row)=DecodeCompactRotationallySymetricBasisState(basis_states(horizontal_basis_state_numbers(i_row)));
-      total_k_horizontal += basis_states(horizontal_basis_state_numbers(i_row)).k; 
+      total_k_horizontal += basis_states(horizontal_basis_state_numbers(i_row)).k;
     }
     total_k_horizontal = total_k_horizontal % nh;
     phase = exp(2.*itpp::pi*std::complex<double>(0,1)*(double(total_k_horizontal)/nh));
     prestate=TensorProduct(statesbasic);
-    cout << "Test if eigenstate of horizontal rotation " 
-      << "Proportionality constant " << proportionality_constant(prestate, apply_horizontal_rotation(prestate, nh)) 
-      << " (error=" << proportionality_test(prestate, apply_horizontal_rotation(prestate, nh)) << ")" << endl; 
-    cout << "A ver " << norm(phase*prestate - apply_horizontal_rotation(prestate, nh)) << endl; 
+    cout << "Test if eigenstate of horizontal rotation "
+      << "Proportionality constant " << proportionality_constant(prestate, apply_horizontal_rotation(prestate, nh))
+      << " (error=" << proportionality_test(prestate, apply_horizontal_rotation(prestate, nh)) << ")" << endl;
+    cout << "A ver " << norm(phase*prestate - apply_horizontal_rotation(prestate, nh)) << endl;
 
-//     Aca voy, ahora toca hacer las traslaciones en forma vertical. Ver que el momento total de lo anterior es igual a la suma de momentos. 
+//     Aca voy, ahora toca hacer las traslaciones en forma vertical. Ver que el momento total de lo anterior es igual a la suma de momentos.
 
 
-    cout << "See that the general projection operator works the same on basis states." << endl; 
+    cout << "See that the general projection operator works the same on basis states." << endl;
     std::cout << "error total=" << error << std::endl;
 
-    cvec bi_symmetric_state; 
+    cvec bi_symmetric_state;
 
     bi_symmetric_state = project_state_vertical_momentum(tv_sector, prestate, nh);
-    cout << "* Test if eigenstate of horizontal rotation " 
-      << "Proportionality constant " << proportionality_constant(bi_symmetric_state, apply_horizontal_rotation(bi_symmetric_state, nh)) 
-      << " (error=" << proportionality_test(bi_symmetric_state, apply_horizontal_rotation(bi_symmetric_state, nh)) << ")" << endl; 
-    cout << "* Test if eigenstate of vertical rotation " 
-      << "Proportionality constant " << proportionality_constant(bi_symmetric_state, apply_vertical_rotation(bi_symmetric_state, nh)) 
-      << " (error=" << proportionality_test(bi_symmetric_state, apply_vertical_rotation(bi_symmetric_state, nh)) << ")" << endl; 
+    cout << "* Test if eigenstate of horizontal rotation "
+      << "Proportionality constant " << proportionality_constant(bi_symmetric_state, apply_horizontal_rotation(bi_symmetric_state, nh))
+      << " (error=" << proportionality_test(bi_symmetric_state, apply_horizontal_rotation(bi_symmetric_state, nh)) << ")" << endl;
+    cout << "* Test if eigenstate of vertical rotation "
+      << "Proportionality constant " << proportionality_constant(bi_symmetric_state, apply_vertical_rotation(bi_symmetric_state, nh))
+      << " (error=" << proportionality_test(bi_symmetric_state, apply_vertical_rotation(bi_symmetric_state, nh)) << ")" << endl;
 
     cout << "Test to see if projector works" << endl;
     int k=0;
@@ -777,11 +645,60 @@ cout <<norm(state-state_out_eduardo) << endl;
     cout <<   exp_minus_i_b_sigma(b) << endl;
     // b = {-0.404, 0.084, 0.361};
     // InputForm[MatrixExp[-I b.Table[Pauli[i], {i, 3}]]]
-    // {{0.8534308186484069 - 0.34318420526987775*I, 
-    // -0.07985449651709063 + 0.3840621022964837*I}, 
-    // {0.0798544965170907 + 0.3840621022964837*I, 
+    // {{0.8534308186484069 - 0.34318420526987775*I,
+    // -0.07985449651709063 + 0.3840621022964837*I},
+    // {0.0798544965170907 + 0.3840621022964837*I,
     // 0.8534308186484068 + 0.3431842052698777*I}}
   }//}}}
 //}}}
   return 0;
 }//}}}
+
+
+
+void generateDataForFig(int q, int dim, int which, int time_steps, vec b, double J,
+                        double J_interaction, int condiciones_iniciales,
+                        std::string folderName, std::string fileName){
+
+  cvec state_env, state;
+  vec state_q;
+  cmat rho;
+
+  for(int ci = 1; ci <= condiciones_iniciales; ci++){
+
+    ofstream myfile;
+    int created = system(("mkdir -p " + folderName).c_str());
+
+    if(created == 0) {
+      myfile.open((folderName + "/" + fileName + std::to_string(ci) + ".dat").c_str());
+
+      state_env = RandomState(dim);               //get an initial random environment
+      state_q = BellState(4);                     //get an initial central system (Bell state)
+      state = TensorProduct(state_env, state_q);  //join both environments
+      rho = partial_trace_qubits(state, which);   //get back the system
+
+      //Get the purity of the central system: itppextmath::Purity(rho)
+      //Get concurrence of the central system: itppextmath::Purity(rho)
+
+      //save to file
+      myfile << 0 << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+
+      for (int i_time = 1; i_time <= time_steps; i_time++){
+
+        apply_common_environment_chain(state, J, J_interaction, b); //apply magnetic kick
+        rho = partial_trace_qubits(state, which);                   //get back the system
+
+
+        //Get the purity of the central system: itppextmath::Purity(rho)
+        //Get concurrence of the central system: itppextmath::Purity(rho)
+
+        //save to file
+        myfile << i_time << " " << itppextmath::Purity(rho) << " " << itppextmath::Concurrence(rho) << endl;
+
+      }
+    } else {
+      cout << "Error creating file: " << created << endl;
+    }
+  }
+
+}
