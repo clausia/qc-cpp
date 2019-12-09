@@ -13,7 +13,7 @@ default:: clean test_spins
 all:: clean documentation test_spins test_spins_fast test_memory_time test_spins2d test_rmt basic_libs.tgz testing test_dev_random
 
 documentation ::
-	doxygen
+	@doxygen ./Doxyfile
 # register:: register.cpp
 # 	$(CXX) -I../ $(CXXFLAGS) -o $@ $@.cpp $(LIBS)
 
