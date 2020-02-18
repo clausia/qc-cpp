@@ -108,7 +108,7 @@ double test_similar_complex_list(itpp::cvec& z1, itpp::cvec& z2){ // {{{
     return z1.size() + z2.size();
   }
   double error=0.;//, e;
-  int dim = z1.size(), min_pos;
+  int dim = z1.size(), min_pos; 
   itpp::cvec zt = z2;
   itpp::Vec<bool> checked(dim);
   itpp::vec errors;
@@ -350,11 +350,11 @@ itpp::ivec next_permutation(const itpp::ivec& v){ // {{{
   int myints[n];
   for (int i=0; i<n; i++){
       myints[i] = v(i);
-  }
+  } 
   std::next_permutation(myints,myints+n);
   for (int i=0; i<n; i++){
       w(i)=myints[i];
-  }
+  } 
 
 return w;
 } // }}}
@@ -365,8 +365,8 @@ itpp::Array<itpp::ivec> SingleTwoPermutation(int i, int j){ // {{{
 } // }}}
 itpp::Array<itpp::ivec> ChangeNotationPermutation(const itpp::ivec& cycle){ // {{{
   // https://www.youtube.com/watch?v=MpKG6FmcIHk
-  // el algoritmo comienza por
-//   cout << "En la rutina jodida  ChangeNotationPermutation cycle=" << cycle <<endl;
+  // el algoritmo comienza por 
+//   cout << "En la rutina jodida  ChangeNotationPermutation cycle=" << cycle <<endl; 
   int q=cycle.size();
   itpp::Array<itpp::ivec> permutation_cycle_notation(0);
   itpp::Vec<bool> checked(q);
@@ -375,7 +375,7 @@ itpp::Array<itpp::ivec> ChangeNotationPermutation(const itpp::ivec& cycle){ // {
 
   itpp::ivec current_cycle;
 
-//   cout << "2 En la rutina jodida  ChangeNotationPermutation " <<endl;
+//   cout << "2 En la rutina jodida  ChangeNotationPermutation " <<endl; 
   while ( current_position <q){
     current_cycle.set_size(0);
 //     cout << "En el while. current_position=" << current_position << endl;
@@ -408,7 +408,7 @@ void all_permutations(int q){ // {{{
 //     std::cout << myints << '\n';
     for (int i=0; i<q; i++){
       std::cout << myints[i] <<" " ;
-    }
+    } 
     std::cout << std::endl;
 //     std::cout << myints[0] << ' ' << myints[1] << ' ' << myints[2] << '\n';
   } while ( std::next_permutation(myints,myints+q) );
@@ -419,20 +419,20 @@ void all_permutations(int q){ // {{{
 // //     std::vector<int> v = {1,2,3};
 //     do {
 // //         print(v);
-//
-//
+// 
+// 
 //     std::cout << v << std::endl;
 // //     for (int e : v) {
 // //         std::cout << " " << e;
 // //     }
 // //     std::cout << std::endl;
-//
+// 
 //     } while (std::next_permutation(v.begin(), v.end()));
 return;
 } // }}}
 template <class Num_T> void interchange_permutations_2line(itpp::Vec<Num_T>& b, const itpp::ivec &p){ // {{{
-  // This routine makes a permutation on vector b, coded with vector p.
-  // If
+  // This routine makes a permutation on vector b, coded with vector p. 
+  // If 
   // b = [45 89 22 31 23 76]
   // and
   // p = [5 3 2 1 0 4]
@@ -440,7 +440,7 @@ template <class Num_T> void interchange_permutations_2line(itpp::Vec<Num_T>& b, 
   // Then the element b(0)=45 will go to position p(0)=5
   // element b(1)=89 will go to position p(1)=3
   // etc
-  // so the permuted b will be
+  // so the permuted b will be 
   // b -> [23 31 22 89 76 45]
   if(b.size() != p.size()){
     std::cerr << "interchange_permutations() in cfpmath: dimension mismatch" << std::endl;
@@ -456,11 +456,11 @@ template <class Num_T> void interchange_permutations_2line(itpp::Vec<Num_T>& b, 
       swap(b,k,qtmp);
     }
   }
-}
+} 
 // }}}
 template <class Num_T> void interchange_permutations_cycle(itpp::Vec<Num_T>& b, const itpp::ivec &c){ // {{{
-  // This routine makes a permutation on vector b, coded with cycle c.
-  // If
+  // This routine makes a permutation on vector b, coded with cycle c. 
+  // If 
   // b = [45 89 22 31 23 76]
   // and
   // c = [4 1 2]
@@ -478,12 +478,12 @@ template <class Num_T> void interchange_permutations_cycle(itpp::Vec<Num_T>& b, 
   for (int k=0; k<c.size(); k++){
     b(c(k))=b_sub(k);
   }
-}
+} 
 // }}}
 int interchange_bits_2line(const int& n_in, const itpp::ivec &p){ // {{{
-  // See documentaiton for
-  // void interchange_permutations_2line
-  // and for
+  // See documentaiton for 
+  // void interchange_permutations_2line 
+  // and for 
   // interchange_bits_cycle
   int n = n_in;
   itpp::Vec<bool> nbits=int_to_bool(n, p.size());
@@ -493,11 +493,11 @@ int interchange_bits_2line(const int& n_in, const itpp::ivec &p){ // {{{
   n = bvec_to_int(nbits);
 //   std::cout << "Control 3 " << std::endl;
   return n;
-}
+} 
 // }}}
 int interchange_bits_cycle(const int& n_in, const itpp::ivec &c){ // {{{
-  // This routine makes a permutation on integer n, coded with cycle c.
-  // If
+  // This routine makes a permutation on integer n, coded with cycle c. 
+  // If 
   // n = 16 = 010000 = [0 0 0 0 1 0 0 ...]
   // and
   // c = [3 4 1 2]
@@ -505,8 +505,8 @@ int interchange_bits_cycle(const int& n_in, const itpp::ivec &c){ // {{{
   // b = [0 1 0 0 0 ... ] = 00010 = 2
   int n = n_in;
   int size = cfpmath::integer_part_log(2,n);
-  if (max(c)+1 > size){ size=max(c)+1;
-//     std::cout << size << std::endl;
+  if (max(c)+1 > size){ size=max(c)+1; 
+//     std::cout << size << std::endl; 
   }
   itpp::Vec<bool> nbits=int_to_bool(n, size);
 //   std::cout << "Control 1 " << nbits << ", " << c << std::endl;
@@ -515,11 +515,11 @@ int interchange_bits_cycle(const int& n_in, const itpp::ivec &c){ // {{{
   n = bvec_to_int(nbits);
 //   std::cout << "Control 3 " << std::endl;
   return n;
-}
+} 
 // }}}
 int interchange_bits_permutation(const int& n_in, const itpp::Array<itpp::ivec> &c){ // {{{
-  // This routine makes a permutation on integer n, coded with cycle c.
-  // If
+  // This routine makes a permutation on integer n, coded with cycle c. 
+  // If 
   // n = 16 = 010000 = [0 0 0 0 1 0 0 ...]
   // and
   // c = [3 4 1 2]
@@ -530,7 +530,7 @@ int interchange_bits_permutation(const int& n_in, const itpp::Array<itpp::ivec> 
     n = interchange_bits_cycle(n, c(i));
   }
   return n;
-}
+} 
 // }}}
 template <class Num_T> itpp::Mat<Num_T > ArrayToMatrix(const itpp::Array<itpp::Vec<Num_T> >& A){// {{{
 //   itpp::Mat<Num_T > tmp;
@@ -538,8 +538,8 @@ template <class Num_T> itpp::Mat<Num_T > ArrayToMatrix(const itpp::Array<itpp::V
   for (int i=0; i<A.size(); i++){
     tmp.set_row(i,A(i));
   }
-  return tmp;
-
+  return tmp; 
+  
 }// }}}
 template <class Num_T> itpp::Mat<Num_T > OuterSum(const itpp::Vec<Num_T >& A, const itpp::Vec<Num_T >& B){// {{{
   itpp::Mat<Num_T > tmp(A.size(), B.size());
@@ -548,15 +548,15 @@ template <class Num_T> itpp::Mat<Num_T > OuterSum(const itpp::Vec<Num_T >& A, co
       tmp(iA, iB)=A(iA)+B(iB);
     }
   }
-  return tmp;
+  return tmp; 
 }// }}}
 template <class Num_T> itpp::Array<Num_T > Outer(const itpp::Array<Num_T >& A, const itpp::Array<Num_T >& B){// {{{
   itpp::Array<Num_T > tmp(0);
   for (int i=0; i<A.size(); i++){
     tmp=itpp::concat(tmp, Elementwiseconcat(A(i),B));
   }
-  return tmp;
-
+  return tmp; 
+  
 }// }}}
 template <class Num_T> bool unique_elements(const Num_T & A){// {{{
   return A.size() == Union(A).size();
@@ -577,7 +577,7 @@ template <class Num_T> itpp::Array<Num_T > Union(const itpp::Array<Num_T >& A, c
     return Union(B);
   }
   itpp::Array<Num_T > tmp;
-  tmp.set_size(1);
+  tmp.set_size(1); 
   tmp(0) = A(0);
   for (int i = 1; i< A.size(); i++){
     if (!Contains(tmp, A(i))){ tmp = itpp::concat(tmp, A(i)); }
@@ -604,7 +604,7 @@ template <class Num_T> itpp::Array<Num_T > del(const itpp::Array<Num_T >& A, con
 }// }}}
 template <class Num_T> itpp::Array<Num_T > minus(const itpp::Array<Num_T >& A, const Num_T & B){// {{{
   itpp::Array<Num_T > A_Union=Union(A);
-  if (!Contains(A_Union,B)){
+  if (!Contains(A_Union,B)){ 
     return A_Union;
   } else {
     int pi=Position_FirstIntersection(A_Union,B);
@@ -620,25 +620,25 @@ template <class Num_T> itpp::Array<Num_T > minus(const itpp::Array<Num_T >& A, c
 }// }}}
 bool EmptyIntersection(const itpp::Array< itpp::ivec >& Array1, const itpp::Array< itpp::ivec >& Array2){// {{{
 //! Stablish if 2 Arrays have an intersection
-/*! It treat them as sets.
+/*! It treat them as sets.  
  */
   for (int i=0; i<Array1.size(); i++){
     if ( itppextmath::Contains(Array2, Array1(i) )){
       return false;
     }
-  }
+  } 
   return true;
 }// }}}
 itpp::Array< itpp::ivec > Intersection(const itpp::Array< itpp::ivec >& Array1, const itpp::Array< itpp::ivec >& Array2){// {{{
-//! Get intersection of two arrays.
-/*! It treat them as sets.
+//! Get intersection of two arrays. 
+/*! It treat them as sets.  
  */
-  itpp::Array<itpp::ivec> tmp;
+  itpp::Array<itpp::ivec> tmp; 
   for (int i=0; i<Array1.size(); i++){
     if ( itppextmath::Contains(Array2, Array1(i) )){
       tmp=itpp::concat(tmp,Array1(i));
     }
-  }
+  } 
   return Union(tmp);
 }// }}}
 template <class Num_T> itpp::Array<Num_T > RemoveItem(const itpp::Array<Num_T >& v, const int index){// {{{
@@ -663,7 +663,7 @@ itpp::Mat<int>  BulkPositionUnion2PositionSets(const itpp::Mat<int>& A, const it
 }// }}}
 // }}}
 // Linear Algebra {{{
-// Vectorization of density matrices.
+// Vectorization of density matrices. 
 itpp::vec vectorization_density_matrix(const itpp::cmat& rho){ // {{{
   // We use the gell man matrices, ordered as in https://blog.suchideas.com/2016/04/sun-gell-mann-matrices-in-mathematica/
   int dim=rho.cols();
@@ -685,7 +685,7 @@ itpp::vec vectorization_density_matrix(const itpp::cmat& rho){ // {{{
   for (int k=1; k<dim; k++){
     y=-sqrt((2.*k)/(k+1));
     x=-y/k;
-//     reconstruyendo
+//     reconstruyendo 
 //     std::cout << "k="<<k<<";  x="<<x<<";    y="<<y<<std::endl;
     rho_vec(k+dim*(dim-1)-1) = x*sum(rho_diag.get(0,k-1)) + rho_diag(k)*y;
   }
@@ -730,7 +730,7 @@ itpp::cmat devectorization_density_matrix(const itpp::vec& rho_vec){ // {{{
 
 } // }}}
 //
-// Traces and Partial traces
+// Traces and Partial traces 
 itpp::cmat partial_trace(const itpp::cvec& state, int dim_leave){ // {{{
   // This partial trace allows to leave a space of arbitrary dimension. Let
   // H = H_a H_b be th ehilbert space. "i" labels H_a and "j" the H_b
@@ -2179,8 +2179,8 @@ void apply_swap(itpp::cmat& rho, int position1, int position2){// {{{
   int mask = cfpmath::pow_2(position1) + cfpmath::pow_2(position2);
   int n1, n2;
   for (int j=0; j<rho.cols()/4; j++){
-    n1=cfpmath::merge_two_numbers(2, j, mask);
-    n2=cfpmath::merge_two_numbers(1, j, mask);
+    n1=cfpmath::merge_two_numbers(2, j, mask); 
+    n2=cfpmath::merge_two_numbers(1, j, mask); 
     rho.swap_rows(n1, n2);
     rho.swap_cols(n1, n2);
 //     swap(state, n1, n2);
