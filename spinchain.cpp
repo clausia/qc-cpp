@@ -157,6 +157,35 @@ namespace spinchain{ // {{{
     return;
   } //}}}
 
+  /**
+   * \brief Applies the magnetic ising model to a state including many to many interactions.
+   *
+   * Applies the magnetic ising model to the topology of a chain of spins that
+   * form an environment and a pair of quits that define the central system,
+   * each of these is located on each of the two edges of the chain with an
+   * interaction with the environment given by `Jcoupling`. The force of
+   * interaction between elements of the environment is indicated in `Jenv`.
+   * The strength of the interaction of an element with the rest of the elements
+   * is indicated with `Jcs` and the decay of the interaction, which is given by
+   * 1 / |m-n|^alpha, is indicated with the parameter `alpha`.
+   *
+   * \code{.cpp}
+   *        *  *
+   *     *        O
+   *    *
+   *    *          O
+   *     *        *
+   *        *  *
+   * \endcode
+   *
+   * \param state [itpp::cvec] state in the form of complex vector.
+   * \param Jenv [double] coupling strength between elements of the environment.
+   * \param Jcoupling [double] coupling strength between the central system and the environment.
+   * \param magnetic_field [itpp::vec] magnetic field with specified strength for each dimension.
+   * \param Jcs [double] coupling strength between an element and the ohers.
+   * \param alpha [double] interaction decaying exponent.
+   * \param sigmax_n_sigmax_m [itpp::Array<itpp::cmat>] sigma^x_n.sigma^x_m array set.
+  */
   void apply_common_environment_chain_and_many_to_many(itpp::cvec& state, double Jenv, double Jcoupling, itpp::vec magnetic_field,
                                                        double Jcs, double alpha, itpp::Array<itpp::cmat>& sigmax_n_sigmax_m){// {{{
 
@@ -169,6 +198,26 @@ namespace spinchain{ // {{{
     return;
   } //}}}
 
+  /**
+   * \brief Applies the magnetic ising model to a state including many to many interactions.
+   *
+   * Applies the magnetic ising model to the topology of a chain of spins.
+   * The force of interaction between elements of the environment is indicated in `Jz`.
+   * The strength of the interaction of an element with the rest of the elements
+   * is indicated with `Jcs` and the decay of the interaction, which is given by
+   * 1 / |m-n|^alpha, is indicated with the parameter `alpha`.
+   *
+   * \code{.cpp}
+   *        *  *  *  *  *  *  *  *  *  *  *  ...  *
+   * \endcode
+   *
+   * \param state [itpp::cvec] state in the form of complex vector.
+   * \param Jz [double] coupling strength between elements of the state.
+   * \param transverse_field [itpp::vec] magnetic field with specified strength.
+   * \param Jcs [double] coupling strength between an element and the ohers.
+   * \param alpha [double] interaction decaying exponent.
+   * \param sigmax_n_sigmax_m [itpp::Array<itpp::cmat>] sigma^x_n.sigma^x_m array set.
+  */
   void apply_environment_epr1_cooperative_shielding(itpp::cvec& state, double Jz, itpp::vec transverse_field,
                                                        double Jcs, double alpha, itpp::Array<itpp::cmat>& sigmax_n_sigmax_m){// {{{
 
@@ -250,6 +299,19 @@ namespace spinchain{ // {{{
     return;
   } // }}}
 
+  /**
+   * \brief Applies the magnetic ising model to a state not includng its last element.
+   *
+   * Applies the magnetic ising model to the topology of a chain of spins.
+   * The force of interaction between elements of the environment is indicated in `Jz`.
+   *
+   * \code{.cpp}
+   *        *  *  *  *  *  *  *  *  *  *  *  ...  *
+   * \endcode
+   *
+   * \param state [itpp::cvec] state in the form of complex vector.
+   * \param Jz [double] coupling strength between elements of the state.
+  */
   void apply_ising_z_cooperative_shielding(itpp::cvec& state, double Jz){// {{{
     int qubits=cfpmath::log_base_2(state.size());
     itpp::vec J(qubits);
@@ -319,6 +381,17 @@ itpp::vec magnetic_field_env2, int qubits_env1){// {{{
     return;
   } // }}}
 
+  /**
+   * \brief Applies a transverse field to a state.
+   *
+   * Apply a a transverse field to each of the positions of an indicated state,
+   * with a `transverse_field` strength, which contains the values in
+   * the required dimension.
+   *
+   *
+   * \param state [itpp::cvec] in the form of complex vector.
+   * \param transverse_field [itpp::vec] transverse field with specified strength for each position.
+  */
   void apply_transverse_field_cooperative_shielding(itpp::cvec& state, itpp::vec transverse_field){// {{{
     int qubits = cfpmath::log_base_2(state.size());
     for (int Position = 0; Position < qubits; Position++){
@@ -1083,6 +1156,19 @@ void apply_ising_allvsall(itpp::cvec& state, double J){//{{{
   // } // }}}
   // Unsorted
 
+  /**
+   * \brief Applies the interaction between each element with the rest of the elements.
+   *
+   * Applies the interaction between each element with the rest of the elements.
+   * The interaction force is specified in `Jcs` and the type of scope is specified
+   * with the `alpha` exponent, since the decay of the interaction between elements
+   * goes as1 / |m-n|^alpha.
+   *
+   * \param state [itpp::cvec] state in the form of complex vector.
+   * \param Jcs [double] coupling strength between an element and the ohers.
+   * \param alpha [double] interaction decaying exponent.
+   * \param sigmax_n_sigmax_m [itpp::Array<itpp::cmat>] sigma^x_n.sigma^x_m array set.
+  */
   void apply_long_or_short_range_interaction(itpp::cvec& state, double Jcs, double alpha, itpp::Array<itpp::cmat>& sigmax_n_sigmax_m){
 
     int qubits = cfpmath::log_base_2(state.size());

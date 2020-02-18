@@ -343,197 +343,6 @@ int main(int argc, char* argv[]) { //{{{
 
     epr1CooperativeShieldingFig1(true);
 
-  } else if(option=="test_clau_tmp_copyVec") {
-
-    cvec vec1(3);
-    vec1(0) = 1;
-    vec1(1) = 2;
-    vec1(2) = 3;
-
-    cvec vec2(vec1);
-
-    cout << "vec1 : " << vec1 << endl;
-    cout << "vec2 : " << vec2 << endl << endl;
-
-    vec1(0) = 8;
-    vec2(2) = 13;
-
-    cout << "vec1 : " << vec1 << endl;
-    cout << "vec2 : " << vec2 << endl;
-
-
-  } else if(option=="test_clau_tmp_expOfMat") {
-
-    auto startTime = chrono::high_resolution_clock::now();
-
-    cout << "Starting..." << endl;
-
-    int q = qubits.getValue();        //qubits quantity odd
-    int dim = pow_2(q);
-    int swap_pos= pow_2(q/2);
-
-    if(q%2 == 0) q = 13;
-
-    cvec state(dim);
-    short value = 1;
-    for(int pos = 0; pos < dim; pos++) {
-      state(pos) = value;
-      if((pos+1)%swap_pos == 0) {
-        value = value * -1;
-      }
-    }
-
-    //state = RandomState(dim);
-    state = state/norm(state);
-    cout << "State : " << state << endl;
-
-    cout << "... state created (qubits = " << q << ")" << endl;
-
-    Array<cmat> sigmax_for_position(q);
-    ivec pos_sigma_x(q);
-    for(int pos_q = 0; pos_q < q; pos_q++){
-      pos_sigma_x.zeros();
-      pos_sigma_x(pos_q) = 1;
-      cmat sigmax_n = sigma(pos_sigma_x);
-      sigmax_for_position(pos_q) = sigmax_n;
-    }
-
-    cout << "... operators created (sigma_n^x)" << endl;
-
-    int tot = (q - 1)*(q)/2;
-    Array<cmat> sigmax_n_sigmax_m(tot);
-    int count = 0;
-    for (int m = 1; m < q; m++){
-      for (int n = 0; n < m; n++){
-        pos_sigma_x.zeros();
-        pos_sigma_x(n) = 1;
-        pos_sigma_x(m) = 1;
-        cmat sigmax_nm = sigma(pos_sigma_x);
-        cout << sigmax_nm << endl;
-        sigmax_n_sigmax_m(count++) = sigmax_nm;
-      }
-      //progressBar((double)count/tot);
-    }
-
-    cout << endl << "... operators created (sigmax_n_sigmax_m)" << endl;
-
-    int time_steps = timeSteps.getValue();
-
-    std::complex<double> minus_i = -std::complex<double>(0,1);
-    double Jcs = 1.0;
-    double alpha = 0.0;
-
-    for (int i_time = 1; i_time <= time_steps; i_time++){
-
-      int count = 0;
-      for (int m = 1; m < q; m++){
-        for (int n = 0; n < m; n++){
-          double jota = Jcs/std::pow(std::abs(m - n), alpha);
-          cmat param_exp = minus_i*jota*sigmax_n_sigmax_m(count++);
-          //cmat exp_mat = itpp::exp(param_exp);
-          cmat exp_mat = itppextmath::exponentiate(param_exp);
-
-          cout << "........ jota = " << jota << endl;
-          //cout << "........ sigmax_n_sigmax_m = " << sigmax_n_sigmax_m(count) << endl;
-          cout << "........ param exp = " << param_exp << endl;
-          cout << "........ exp mat = " << exp_mat << endl;
-          state = (exp_mat)*state;
-          cout << "........ state parcial : " << state << endl;
-        }
-      }
-
-      /*itpp::vec vvv(3); vvv.zeros(); vvv(0) = 1;
-      itpp::ivec pos(2);
-      itpp::cvec moco(2);
-      itpp::cmat exp_m_i_b_sig = itppextmath::exp_minus_i_b_sigma(vvv);
-      for (int m = 1; m < q; m++){
-        for (int n = 0; n < m; n++){
-          for (int i=0; i<state.size()/2; i++){
-            pos(0)=cfpmath::merge_two_numbers(0,i,cfpmath::pow_2(m));
-            pos(1)=cfpmath::merge_two_numbers(0,i,cfpmath::pow_2(n));
-            moco= exp_m_i_b_sig*state(pos);
-            state(pos(0))= moco(0);
-            state(pos(1))= moco(1);
-          }
-          cout << "........ state parcial : " << state << endl;
-        }
-      }*/
-
-      cout << "State : " << state << endl;
-    }
-
-
-    cout << endl << "... finishing" << endl;
-
-    auto endTime = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::seconds>(endTime - startTime);
-    cout << "Excecution time: " << duration.count()/60 << " min " << duration.count()%60 << " sec" << endl;
-
-  } else if(option=="test_clau_tmp_applySigmaxN") {
-
-    auto startTime = chrono::high_resolution_clock::now();
-
-    cout << "Starting..." << endl;
-
-    int q = qubits.getValue();        //qubits quantity odd
-    int dim = pow_2(q);
-    int swap_pos= pow_2(q/2);
-
-    if(q%2 == 0) q = 13;
-
-    cvec state(dim);
-    short value = 1;
-    for(int pos = 0; pos < dim; pos++) {
-      state(pos) = value;
-      if((pos+1)%swap_pos == 0) {
-        value = value * -1;
-      }
-    }
-
-    //state = RandomState(dim);
-    //state = state/norm(state);
-    cout << "State : " << state << endl;
-
-    cout << "... state created (qubits = " << q << ")" << endl;
-
-    Array<cmat> sigmax_for_position(q);
-    ivec pos_sigma_x(q);
-    for(int pos_q = 0; pos_q < q; pos_q++){
-      pos_sigma_x.zeros();
-      pos_sigma_x(pos_q) = 1;
-      cmat sigmax_n = sigma(pos_sigma_x);
-      sigmax_for_position(pos_q) = sigmax_n;
-      cout << "sigmax_" << pos_q << " = " << sigmax_n << endl;
-    }
-
-    cout << "... operators created (sigma_n^x)" << endl;
-
-
-    cout << endl << endl;
-
-    cvec tmp(state);
-    //for(int pos_q = 0; pos_q < q; pos_q++){
-    int pos_q = 1;
-    cout << ".....mat * vec : " << sigmax_for_position(pos_q)*state << endl;
-    cout << "expected_value : " << real(expected_value(sigmax_for_position(pos_q), state)) << endl;
-    apply_sigma_x(tmp, pos_q);
-    cout << ".apply_sigma_x : " << tmp << endl;
-    cout << "...........dot : " << real(itpp::dot(itpp::conj(state), tmp)) << endl;
-    //}
-
-
-    cout << endl << endl;
-    cout << "::: state = " << state << endl;
-    cout << "::::: tmp = " << tmp << endl;
-
-
-
-    cout << endl << "... finishing" << endl;
-
-    auto endTime = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::seconds>(endTime - startTime);
-    cout << "Excecution time: " << duration.count()/60 << " min " << duration.count()%60 << " sec" << endl;
-
   } else if(option=="test_MatrixForIsing_star") {// {{{
     int q=qubits.getValue();
     int dim=pow_2(q);
@@ -941,15 +750,6 @@ void epr1CooperativeShieldingFig1(bool replica){
 
   cout << "... state created (qubits = " << q << ")" << endl;
 
-  /*Array<cmat> sigmax_for_position(q);
-  ivec pos_sigma_x(q);
-  for(int pos_q = 0; pos_q < q; pos_q++){
-    pos_sigma_x.zeros();
-    pos_sigma_x(pos_q) = 1;
-    cmat sigmax_n = sigma(pos_sigma_x);
-    sigmax_for_position(pos_q) = sigmax_n;
-  }
-  cout << "... operators created (sigma_n^x)" << endl;*/
 
   int tot = (q - 1)*(q)/2;
   Array<cmat> sigmax_n_sigmax_m(tot);
@@ -1028,8 +828,7 @@ void epr1CooperativeShieldingFig1(bool replica){
       //myfile << real(expected_value(sigmax_for_position(pos_q), state)) << " ";
       cvec tmp(state);
       apply_sigma_x(tmp, pos_q);
-      //myfile << real(itpp::dot(itpp::conj(state), tmp)) << " ";
-      myfile << itpp::dot(itpp::conj(state), tmp) << " ";
+      myfile << real(itpp::dot(itpp::conj(state), tmp)) << " ";
     }
     myfile << endl;
 
@@ -1058,8 +857,7 @@ void epr1CooperativeShieldingFig1(bool replica){
         //myfile << real(expected_value(sigmax_for_position(pos_q), state)) << " ";
         cvec tmp(state);
         apply_sigma_x(tmp, pos_q);
-        //myfile << real(itpp::dot(itpp::conj(state), tmp)) << " ";
-        myfile << itpp::dot(itpp::conj(state), tmp) << " ";
+        myfile << real(itpp::dot(itpp::conj(state), tmp)) << " ";
       }
       myfile << endl;
 
@@ -1077,6 +875,17 @@ void epr1CooperativeShieldingFig1(bool replica){
 
 }
 
+/**
+ * \brief Generates random numbers with a uniform distribution.
+ *
+ * Generates random numbers with a uniform distribution, within a specified
+ * range with `W`, that range is then [-W/2, W/2], in addition to each
+ * random number it adds a base value given by `B`.
+ *
+ * \param B [double] base value that is added to each generated random number.
+ * \param W [double] indicates the range in which random numbers will be generated: [-W/2, W/2].
+ * \param q [int] number of random numbers to generate.
+*/
 vec randomUniformDistribution(double B, double W, int q){
 
   vec values(q);
@@ -1092,6 +901,19 @@ vec randomUniformDistribution(double B, double W, int q){
   return values;
 }
 
+/**
+ * \brief Shows a progress bar with the specified percentage.
+ *
+ * Shows a progress bar with the specified percentage between 0 and 1. It makes
+ * a carriage return but not an enter so that the next bar is placed in the
+ * same position as the previous one.
+ *
+ * \code{.cpp}
+ *  [====================================================================================                ] 84 %
+ * \endcode
+ *
+ * \param progress [double] percentage of completion.
+*/
 void progressBar(double progress){
 
   if(progress > 1) progress = 1;
