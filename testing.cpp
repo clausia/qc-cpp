@@ -20,11 +20,11 @@
   TCLAP::ValueArg<double> d2("","d2", "Second double argument",false, 0.,"double",cmd);
   TCLAP::SwitchArg no_general_report("","no_general_report", "Print the general report", cmd);
 // }}}
-using namespace std;
-using namespace cfpmath;
-using namespace itppextmath;
+using namespace std;  
+using namespace cfpmath;  
+using namespace itppextmath;  
 
-using namespace itpp;
+using namespace itpp;  
 int main(int argc, char* argv[]){
   // {{{ initial definitions
   cmd.parse( argc, argv );
@@ -36,16 +36,16 @@ int main(int argc, char* argv[]){
   unsigned int semilla=seed.getValue();
   if (semilla == 0){
     Random semilla_uran; semilla=semilla_uran.strong();
-  }
+  } 
   itpp::RNG_reset(semilla);
   // }}}
   // {{{ Report on the screen
   if(!no_general_report.getValue()){
-    cout << "#linea de comando: ";
-    for(int i=0;i<argc;i++){
+    cout << "#linea de comando: "; 
+    for(int i=0;i<argc;i++){ 
       cout <<argv[i]<<" " ;
     } cout << endl ;
-    cout << "#semilla = " << semilla << endl;
+    cout << "#semilla = " << semilla << endl; 
     error += system("echo \\#hostname: $(hostname)");
     error += system("echo \\#comenzando en: $(date)");
     error += system("echo \\#uname -a: $(uname -a)");
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]){
     cout << rotate_bits(i1.getValue(), i2.getValue()) << endl ;
   // }}}
   } else if (option == "test_partial_trace_mixed") { // {{{
-    int qubits=i1.getValue(); int d=pow_2(qubits);
+    int qubits=i1.getValue(); int d=pow_2(qubits); 
     cmat rho(d,d);
     double x,y;
     for (int i=0; i<d; i++){
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]){
     }
   // }}}
   } else if (option == "test_sum_sigma_x") { // {{{
-    int qubits=i1.getValue(); int d=pow_2(qubits);
+    int qubits=i1.getValue(); int d=pow_2(qubits); 
     double x,y;
     cvec psi(d), psip;
     for (int i=0; i<d; i++){
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]){
 //     cout << "estado " << state << endl;
     rho= partial_trace_qubits(state,mask);
 //     cout << rho << endl;
-//     abort();
+//     abort(); 
     for (int i=0; i<rho.cols(); i++){
       for (int j=0; j<rho.cols(); j++){
         cout << real(rho(i,j)) << " " << imag(rho(i,j)) <<endl;
@@ -162,7 +162,7 @@ int main(int argc, char* argv[]){
   // }}}
   } else if (option == "test_all_bit_rotations") { // {{{
     ivec res=all_bit_rotations(i1.getValue(), i2.getValue());
-    for (int i=0; i<res.size(); i++){
+    for (int i=0; i<res.size(); i++){ 
       cout <<res(i) << " ";
     }
     cout << endl ;
@@ -186,7 +186,7 @@ int main(int argc, char* argv[]){
       }
     }
 //     state_out= H*state;
-
+    
     eig_sym(H,lambda, eigenvectors);
     rho_out = GetState(eigenvectors, lambda, state, t, da);
     for (int i=0; i<da; i++){
@@ -220,7 +220,7 @@ int main(int argc, char* argv[]){
       }
     }
 //     state_out= H*state;
-
+    
     eig_sym(H,lambda, eigenvectors);
     state_out = GetState(eigenvectors, lambda, state, t);
     for (int i=0; i<state_out.size(); i++){
@@ -239,8 +239,8 @@ int main(int argc, char* argv[]){
     int d=pow_2(q);
     cvec state(d), state_1,state_2;
     double total_error = 0.;
-
-    state=RandomState(d);
+    
+    state=RandomState(d); 
 //     state = 0.; state(1)=1.;
 
 //     Array<cmat> SingleQubitGates(0);
@@ -249,8 +249,8 @@ int main(int argc, char* argv[]){
 //     SingleQubitGates=concat(sigma(1), SingleQubitGates);
 //     SingleQubitGates=concat(sigma(2), SingleQubitGates);
 //     SingleQubitGates=concat(sigma(3), SingleQubitGates);
-//
-    // combinaciones de single qubit gates, leugo controles.
+//       
+    // combinaciones de single qubit gates, leugo controles. 
 
 //     for (int i=0; i<SingleQubitGates.size(); i++){
     for (int t=0; t<q; t++){
@@ -286,8 +286,8 @@ int main(int argc, char* argv[]){
         }
       } // }}}
     }
-    cout << "Error total = " << total_error << endl;
-
+    cout << "Error total = " << total_error << endl; 
+      
   // }}}
   } else if (option == "test_arbitrary_2_qubit_gate") { // {{{
 //     cout << "in option test_arbitrary_2_qubit_gate 1" << endl;
@@ -304,12 +304,12 @@ int main(int argc, char* argv[]){
     int ns=SingleQubitGates.size();
     cmat cu;
 //     cout << "in option test_arbitrary_2_qubit_gate 2" << endl;
-    state=RandomState(d);
+    state=RandomState(d); 
 //     state = 0.; state(1)=1.;
     // las compuertas controladas, c-Pauli y c-R_k
 
     // All single qubit gates combined  {{{
-    for (int t1=0; t1<q; t1++){ for (int t2=0; t2<t1; t2++){ //
+    for (int t1=0; t1<q; t1++){ for (int t2=0; t2<t1; t2++){ // 
 //       cout << "adsfa " << t1 << endl;
       for (int i1=0; i1<ns; i1++){ for (int i2=0; i2<ns; i2++){
 //         cout << "adsfa (t1, t2, i1, i2)=(" << t1 << "," << t2 << "," << i1 << ","  << i2 << ")"<< endl;
@@ -327,10 +327,10 @@ int main(int argc, char* argv[]){
           cout << "state_2=" << state_2 << endl;
           abort();
         } //}}}
-      } }
+      } } 
     } }// }}}
     // Swap gates {{{
-    for (int t1=0; t1<q; t1++){ for (int t2=0; t2<t1; t2++){
+    for (int t1=0; t1<q; t1++){ for (int t2=0; t2<t1; t2++){ 
       if (t1==t2){
         continue;
       }
@@ -351,12 +351,12 @@ int main(int argc, char* argv[]){
     } }// }}}
     // control not gates {{{
 //     cout << "Working on the cnot gate" << endl;
-    for (int c=0; c<q; c++){ for (int t=0; t<q; t++){
+    for (int c=0; c<q; c++){ for (int t=0; t<q; t++){ 
       if (c==t){
         continue;
       }
 //       cout << "c=" << c << ", t=" << t << endl;
-      for (int i=0; i<ns; i++){
+      for (int i=0; i<ns; i++){ 
         state_1 = state; state_2 = state;
 //         apply_control_u(state, c, t, SingleQubitGates(i));
 //         cu = control_u_matrix( SingleQubitGates(i));
@@ -381,12 +381,12 @@ int main(int argc, char* argv[]){
     } }// }}}
     // control pauli gates {{{
 //     cout << "Working on the cnot gate" << endl;
-    for (int c=0; c<q; c++){ for (int t=0; t<q; t++){
+    for (int c=0; c<q; c++){ for (int t=0; t<q; t++){ 
       if (c==t){
         continue;
       }
 //       cout << "c=" << c << ", t=" << t << endl;
-      for (int i=0; i<ns; i++){
+      for (int i=0; i<ns; i++){ 
         state_1 = state; state_2 = state;
         apply_control_u(state_1, c, t, SingleQubitGates(i));
         cu = control_u_matrix( SingleQubitGates(i));
@@ -408,14 +408,14 @@ int main(int argc, char* argv[]){
         } //}}}
       }
     } }// }}}
-    cout << "Error total = " << total_error << endl;
-
+    cout << "Error total = " << total_error << endl; 
+      
   // }}}
   } else if (option == "test_bloch") { // {{{
     double theta=d1.getValue();
     double phi=d2.getValue();
-    cout << "Estado = " << BlochToQubit(theta,phi)<< endl;
-
+    cout << "Estado = " << BlochToQubit(theta,phi)<< endl; 
+      
   // }}}
   } else if (option == "test_simple_diagonalization_symmetric_complex") { // {{{
     int n=2;
